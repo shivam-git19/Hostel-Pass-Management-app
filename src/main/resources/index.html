@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Pass Management</title>
+    <script>
+        async function registerStudent() {
+            const student = {
+                name: document.getElementById('name').value,
+                sapId: document.getElementById('sapId').value,
+                password: document.getElementById('password').value,
+                regNum: document.getElementById('regNum').value,
+                course: document.getElementById('course').value,
+                contactNumber: document.getElementById('contactNumber').value,
+                guardianContact: document.getElementById('guardianContact').value,
+                email: document.getElementById('email').value,
+                room: document.getElementById('room').value
+            };
+
+            const response = await fetch('/api/students/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(student)
+            });
+
+            const result = await response.json();
+            console.log(result);
+        }
+
+        async function loginStudent() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const response = await fetch(`/api/students/login?email=${email}&password=${password}`, {
+                method: 'POST'
+            });
+
+            const result = await response.json();
+            console.log(result);
+        }
+    </script>
+</head>
+<body>
+<h1>Hostel Pass Management</h1>
+<h2>Register Student</h2>
+<input type="text" id="name" placeholder="Name" required>
+<input type="text" id="sapId" placeholder="SAP ID" required>
+<input type="password" id="password" placeholder="Password" required>
+<input type="text" id="regNum" placeholder="Registration Number" required>
+<input type="text" id="course" placeholder="Course" required>
+<input type="text" id="contactNumber" placeholder="Contact Number" required>
+<input type="text" id="guardianContact" placeholder="Guardian Contact" required>
+<input type="email" id="email" placeholder="Email" required>
+<input type="text" id="room" placeholder="Room" required>
+<button onclick="registerStudent()">Register</button>
+
+<h2>Login Student</h2>
+<input type="email" id="loginEmail" placeholder="Email" required>
+<input type="password" id="loginPassword" placeholder="Password" required>
+<button onclick="loginStudent()">Login</button>
+</body>
+</html>
