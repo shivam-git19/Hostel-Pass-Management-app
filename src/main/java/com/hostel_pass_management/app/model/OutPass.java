@@ -27,5 +27,4 @@ public class OutPass {
     private String permission; // 'G' for granted, 'D' for denied
     private String leaveAddress;
 
-    // Getters and Setters
 }

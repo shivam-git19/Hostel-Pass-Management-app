@@ -21,5 +21,4 @@ public class Warden {
     private String email;
     private String password;
 
-    // Getters and Setters
 }

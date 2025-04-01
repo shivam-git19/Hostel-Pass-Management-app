@@ -22,5 +22,3 @@ public class StudentService {
         return null;
     }
 }
-
-// Similar services for Warden, Guard, and OutPass
