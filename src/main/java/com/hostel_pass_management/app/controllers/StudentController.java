@@ -15,7 +15,9 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+
     @PostMapping("/register")
+    @CrossOrigin(origins = "http://localhost:3000")
     public Student register(@RequestBody Student student) {
         return studentService.registerStudent(student);
     }
