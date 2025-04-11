@@ -36,4 +36,22 @@ public class WardenController {
                     .body(new ApiResponse<>("Not found", null));
         }
     }
+
+    // Endpoint to update a Warden's information
+    @PutMapping("/{id}")
+    public ResponseEntity<Warden> updateWarden(@PathVariable Long id, @RequestBody Warden wardenDetails) {
+        Warden updatedWarden = wardenService.updateWarden(id, wardenDetails);
+        if (updatedWarden != null) {
+            return ResponseEntity.ok(updatedWarden);
+        } else {
+            return ResponseEntity.notFound().build(); // Return 404 if warden not found
+        }
+    }
+
+    // Endpoint to delete a Warden by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWarden(@PathVariable Long id) {
+        wardenService.deleteWarden(id);
+        return ResponseEntity.noContent().build(); // Return 204 No Content
+    }
 }

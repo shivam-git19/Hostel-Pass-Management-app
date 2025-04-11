@@ -32,4 +32,22 @@ public class StudentController {
                     .body(new ApiResponse<>("Student not found", null));
         }
     }
+
+    // Endpoint to update a Student's information
+    @PutMapping("/{id}")
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
+        Student updatedStudent = studentService.updateStudent(id, studentDetails);
+        if (updatedStudent != null) {
+            return ResponseEntity.ok(updatedStudent);
+        } else {
+            return ResponseEntity.notFound().build(); // Return 404 if student not found
+        }
+    }
+
+    // Endpoint to delete a Student by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build(); // Return 204 No Content
+    }
 }
