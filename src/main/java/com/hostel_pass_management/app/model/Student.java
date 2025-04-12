@@ -17,7 +17,6 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String sapId;
     private String password;
     private String regNum;
     private String course;
