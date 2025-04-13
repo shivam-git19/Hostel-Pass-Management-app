@@ -1,19 +1,28 @@
 package com.hostel_pass_management.app.controllers;
 
 import com.hostel_pass_management.app.ApiResponse;
+import com.hostel_pass_management.app.dto.StudentDTO;
 import com.hostel_pass_management.app.model.LoginRequest;
 import com.hostel_pass_management.app.model.Student;
 import com.hostel_pass_management.app.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/students")
 public class StudentController {
+
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
 
     @PostMapping("/register")
@@ -24,15 +33,26 @@ public class StudentController {
 
     @PostMapping("/login")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ApiResponse<Student>> login(@RequestBody LoginRequest loginRequest) {
-        String email = loginRequest.getEmail();
-        String password = loginRequest.getPassword();
-        Student student = studentService.login(email, password);
-        if (student != null) {
-            return ResponseEntity.ok(new ApiResponse<>("Here are the student details", student));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse<>("Student not found", null));
+    public ResponseEntity<ApiResponse<StudentDTO>> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            // Authenticate the user
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+            );
+
+            // If authentication is successful, retrieve the student details
+            String email = loginRequest.getEmail();
+            StudentDTO studentDTO = studentService.login(email, loginRequest.getPassword());
+            if (studentDTO != null) {
+                return ResponseEntity.ok(new ApiResponse<>("Here are the student details", studentDTO));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ApiResponse<>("Student not found", null));
+            }
+        } catch (AuthenticationException e) {
+            // Handle authentication failure
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse<>("Invalid credentials", null));
         }
     }
 
